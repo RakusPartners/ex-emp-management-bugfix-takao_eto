@@ -119,8 +119,10 @@ public class AdministratorController {
 		Administrator administrator = administratorService.login(form.getMailAddress(), form.getPassword());
 		if (administrator == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
-			return "redirect:/";
+		return "redirect:/";
 		}
+		//セッションに管理者情報を保存
+		session.setAttribute("loggedAdministrator", administrator);
 		return "redirect:/employee/showList";
 	}
 
@@ -137,5 +139,4 @@ public class AdministratorController {
 		session.invalidate();
 		return "redirect:/";
 	}
-
 }

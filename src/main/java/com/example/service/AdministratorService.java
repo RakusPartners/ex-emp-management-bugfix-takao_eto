@@ -42,8 +42,10 @@ public class AdministratorService {
 	}
 
 	/**
-	 * 重複防止処理の記述.
-	 */
+	 * administratorRepository）から管理者を検索
+	 *
+	 *もし管理者が見つかればtrue、見つからなければfalseが返される
+	*/
 	public boolean isMailAddressDuplicated(String mailAddress) {
         return administratorRepository.findByMailAddress(mailAddress) != null;
     }
