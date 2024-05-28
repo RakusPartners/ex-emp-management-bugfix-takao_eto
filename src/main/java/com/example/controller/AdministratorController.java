@@ -80,6 +80,14 @@ public class AdministratorController {
 		if(result.hasErrors()){
 			return "administrator/insert";
 		}
+		//DBのメールアドレス欄にデータが既にある場合は、エラー表示させてinsertメソッドにリターン
+		//再び管理者情報用フォームを表示させる
+		if(administratorService.isMailAddressDuplicated(form.getMailAddress())){
+			result.rejectValue("mailAddress", null, "このメールアドレスは既に登録されています");
+			return "administrator/insert";
+		}
+
+
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
@@ -111,8 +119,10 @@ public class AdministratorController {
 		Administrator administrator = administratorService.login(form.getMailAddress(), form.getPassword());
 		if (administrator == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
-			return "redirect:/";
+		return "redirect:/";
 		}
+		//セッションに管理者情報を保存
+		session.setAttribute("loggedAdministrator", administrator);
 		return "redirect:/employee/showList";
 	}
 
@@ -129,5 +139,4 @@ public class AdministratorController {
 		session.invalidate();
 		return "redirect:/";
 	}
-
 }
