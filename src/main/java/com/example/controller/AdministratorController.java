@@ -80,6 +80,14 @@ public class AdministratorController {
 		if(result.hasErrors()){
 			return "administrator/insert";
 		}
+		//DBのメールアドレス欄にデータが既にある場合は、エラー表示させてinsertメソッドにリターン
+		//再び管理者情報用フォームを表示させる
+		if(administratorService.isMailAddressDuplicated(form.getMailAddress())){
+			result.rejectValue("mailAddress", null, "このメールアドレスは既に登録されています");
+			return "administrator/insert";
+		}
+
+
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(form, administrator);
